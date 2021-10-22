@@ -14,7 +14,8 @@ let result = 0;
 
 rl.on('line', (line) => {
 
-    const [id, file] = line.split(', ');
+    const [id, fileAndLine] = line.split(', ');
+    const [file, lineNumber] = fileAndLine.split(':');
 
     let content = fs.readFileSync(file).toString();
     

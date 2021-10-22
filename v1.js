@@ -13,29 +13,28 @@ const rl = readline.createInterface({
 
 rl.on('line', (line) => {
 
-    const [id, file] = line.split(', ');
+    const [id, fileAndLine] = line.split(', ');
+    const [file, lineNumber] = fileAndLine.split(':');
 
-    if (id in found) {
-        found[id].push(file);
+    if (file in found) {
+        found[file].push(id);
     } else {
-        found[id] = [file];
+        found[file] = [id];
     }
 
-    // process each line, which will be each id
-    // console.log(`${line} = ${id} | ${file}`);
 });
 
 rl.on('close', () => {
     console.log(JSON.stringify(found));
 
-    for (const id of Object.keys(found)) {
-        for (const file of found[id]) {
-            let content = fs.readFileSync(file).toString();
-            
-            content = content.replace(id, () => `'${crypto.randomUUID()}'`);
+    for (const file of Object.keys(found)) {
+        let content = fs.readFileSync(file).toString();
 
-            fs.writeFileSync(file, content);
+        for (const id of found[file]) {
+            content = content.replace(id, () => `'${crypto.randomUUID()}'`);
         }
+
+        fs.writeFileSync(file, content);
     }
 
 });
