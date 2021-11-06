@@ -14,12 +14,12 @@ let result = 0;
 
 rl.on('line', (line) => {
 
-    const [id, fileAndLine] = line.split(', ');
+    const [id, fileAndLine] = line.split(' ');
     const [file, lineNumber] = fileAndLine.split(':');
 
     let content = fs.readFileSync(file).toString();
     
-    content = content.replace(id, () => `'${crypto.randomUUID()}'`);
+    content = content.replace(id, () => `${crypto.randomUUID()}`);
 
     fs.writeFileSync(file, content);
 

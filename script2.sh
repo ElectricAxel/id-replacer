@@ -2,7 +2,7 @@
 
 shopt -s globstar
 
-results=$(awk '/ *id: ?\47[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\47.*$/ {print $2 " " FILENAME}' workflows/*/src/**/*.ts | sort | uniq -D -w 38)
+results=$(awk "match(\$0, $1, res) {print res[1] \" \" FILENAME}" $2 | sort | uniq -D -w 38)
 
 # echo "results"
 # echo "$results"
@@ -13,7 +13,13 @@ then
     exit 0
 fi
 
-results=$(echo $results | sed "s/[\',]//g")
+linecount=$(echo "$results" | wc -l)
+
+# echo "linecount"
+# echo "$linecount"
+# echo " "
+
+results=$(echo $results | sed "s/[\n]//g")
 
 # echo "results"
 # echo "$results"
@@ -23,12 +29,6 @@ read -a resultsarray <<< $results
 
 # echo "{resultsarray[@]}"
 # echo "${resultsarray[@]}"
-# echo " "
-
-linecount=$(echo "$results" | wc -l)
-
-# echo "linecount"
-# echo "$linecount"
 # echo " "
 
 uuids=$(curl "https://www.uuidtools.com/api/generate/v4/count/$linecount")

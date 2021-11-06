@@ -13,7 +13,7 @@ const rl = readline.createInterface({
 
 rl.on('line', (line) => {
 
-    const [id, fileAndLine] = line.split(', ');
+    const [id, fileAndLine] = line.split(' ');
     const [file, lineNumber] = fileAndLine.split(':');
 
     if (file in found) {
@@ -31,7 +31,7 @@ rl.on('close', () => {
         let content = fs.readFileSync(file).toString();
 
         for (const id of found[file]) {
-            content = content.replace(id, () => `'${crypto.randomUUID()}'`);
+            content = content.replace(id, () => `${crypto.randomUUID()}`);
         }
 
         fs.writeFileSync(file, content);
